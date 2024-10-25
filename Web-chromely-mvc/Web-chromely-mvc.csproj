@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Web_chromely_mvc</RootNamespace>
+	  <ApplicationIcon>chromely.ico</ApplicationIcon>
+	  <OutputType>WinExe</OutputType>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<None Include="wwwroot\**" CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="chromely.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Chromely" Version="5.2.101" />
+		<PackageReference Include="pythonnet" Version="3.0.4" />
+		<PackageReference Include="VideoLibrary" Version="3.2.6" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="chromely.ico">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+</Project>
