@@ -6,7 +6,7 @@
     <title>@ViewData["Title"] - Web_chromely_mvc</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Web_chromely_mvc.styles.css" asp-append-version="true" />
+    @*<link rel="stylesheet" href="~/Web_chromely_mvc.styles.css" asp-append-version="true" />*@
 </head>
 <body>
     <header>
@@ -21,6 +21,9 @@
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="DownloadVideo">Download</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
@@ -38,7 +41,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2024 - Web_chromely_mvc - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2024 - Web_chromely_mvc
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

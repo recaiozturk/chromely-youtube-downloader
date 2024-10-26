@@ -7,15 +7,5 @@
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
-<h1>YouTube Video Downloader</h1>
+<h1>Welcome YouTube Video Downloader</h1>
 
-<form asp-action="DownloadVideo" method="post">
-    <label for="url">YouTube URL:</label>
-    <input type="text" id="url" name="url" required />
-    <button type="submit">Download</button>
-</form>
-
-@if (ViewBag.Output != null)
-{
-    <pre>@ViewBag.Output</pre>
-}

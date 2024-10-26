@@ -5,16 +5,21 @@ using Web_chromely_mvc.Models;
 using System.IO;
 using System.Net;
 using System.Net.Http.Headers;
+using Web_chromely_mvc.Services;
+using Microsoft.AspNetCore.SignalR;
+using Web_chromely_mvc.Hubs;
 
 namespace Web_chromely_mvc.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IHubContext<DownloadHub> _hubContext;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IHubContext<DownloadHub> hubContext)
         {
             _logger = logger;
+            _hubContext = hubContext;
         }
 
         public IActionResult Index()
@@ -22,51 +27,104 @@ namespace Web_chromely_mvc.Controllers
             return View();
         }
 
+        public async Task<IActionResult> DownloadVideo()
+        {
+            return View();
+        }
+
         [HttpPost]
-        public async Task<IActionResult> DownloadVideoAsync(string url)
+        public async Task<JsonResult> DownloadVideo(string audioUri, Guid downloadId,string title)
         {
             try
             {
-                // Custom Youtube
                 var youtube = new CustomYouTube();
-                //var videos = youtube.GetAllVideosAsync("https://www.youtube.com/watch?v=qK_NeRZOdq4").GetAwaiter().GetResult();
-                //var maxResolution = videos.First(i => i.Resolution == videos.Max(j => j.Resolution));
+                //var videoInfos = await youtube.GetAllVideosAsync(url);
+                //var audio = videoInfos.FirstOrDefault(a => a.AudioBitrate == 128 && a.AudioFormat == AudioFormat.Aac);
 
-                //our tests
-                var videoInfos = youtube.GetAllVideosAsync(url).GetAwaiter().GetResult();
+                //var audio = await youtube.GetVideoAsync(audioUri);
 
-                var audio=videoInfos.ToList().FirstOrDefault(a=>a.AudioBitrate==128 && a.AudioFormat==AudioFormat.Aac);
-
-                youtube
-                    .CreateDownloadAsync(
-                    new Uri(audio.Uri),
-                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), $"{audio.Title}.mp3")
-,
-                    new Progress<Tuple<long, long>>((Tuple<long, long> v) =>
+                await youtube.CreateDownloadAsync(
+                    new Uri(audioUri),
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), $"{title}.mp3"),
+                    new Progress<Tuple<long, long>>(async v =>
                     {
                         var percent = (int)((v.Item1 * 100) / v.Item2);
-                        _logger.LogInformation(string.Format("Downloading.. ( % {0} ) {1} / {2} MB\r", percent, (v.Item1 / (double)(1024 * 1024)).ToString("N"), (v.Item2 / (double)(1024 * 1024)).ToString("N")));
-                    }))
-                    .GetAwaiter().GetResult();
+                        await _hubContext.Clients.All.SendAsync("ReceiveProgress", downloadId, percent);
 
-
-                //genel kodlarımız bu sekilde v1 de yapılacaklar
-                //yapilacaklar
-                //girilen linkte tusa basılınca bitrate göre müzikler listelencek(daha sonra video vs de eklenebilir)
-                //müziklerin listelenmesi json ile olacak ajax
-                //download diyince bar tasarımı ile download gerceklescek(üzerinde durulabilir nasıl olacagı)
-                //hata sayfası olusturulacak hata karsılasınca oraya atsın(müzik bulunamadı,hata ile karsılasıldı tarzında)
-                //indirilme klasoru secilebilecek(ayarlar cookide vs tutulabilir arastırılacak)
-                
-              
+                    }));
             }
             catch (Exception e)
             {
-
-                throw;
+               
+                _logger.LogError(e, "Download failed.");
+                return Json(0);
             }
-            return View();
+
+            return Json(1);
         }
+
+        [HttpPost]
+        public async Task<JsonResult> GrabVideoAndAudios(string url)
+        {
+            List<Guid> videoIds = new List<Guid>();
+
+            var youtube = new CustomYouTube();
+            var videoInfos = await youtube.GetAllVideosAsync(url);
+
+            var audios = videoInfos.Where(a => a.AdaptiveKind == AdaptiveKind.Audio).ToList();
+
+            foreach ( var audio in audios ) 
+            {
+                videoIds.Add(Guid.NewGuid());
+            }
+
+
+            if (audios != null)
+                return Json(new JsonModel { IsValid = true,Ids= videoIds, Data = audios }) ;
+            else
+                return Json(new JsonModel { IsValid = false,ErrorMessage="No Video or Audio Found"});
+
+
+        }
+
+        [HttpGet]
+        public IActionResult GetDownloadProgress(Guid downloadId)
+        {
+            var progress = DownloadProgressTracker.GetProgress(downloadId);
+            return Json(new { progress });
+        }
+
+        //        [HttpPost]
+        //        public async Task<IActionResult> DownloadVideoAsync(string url)
+        //        {
+        //            try
+        //            {
+        //                var youtube = new CustomYouTube();
+        //                //our tests
+        //                var videoInfos = youtube.GetAllVideosAsync(url).GetAwaiter().GetResult();
+
+        //                var audio=videoInfos.ToList().FirstOrDefault(a=>a.AudioBitrate==128 && a.AudioFormat==AudioFormat.Aac);
+
+        //                youtube
+        //                    .CreateDownloadAsync(
+        //                    new Uri(audio.Uri),
+        //                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), $"{audio.Title}.mp3")
+        //,
+        //                    new Progress<Tuple<long, long>>((Tuple<long, long> v) =>
+        //                    {
+        //                        var percent = (int)((v.Item1 * 100) / v.Item2);
+        //                        _logger.LogInformation(string.Format("Downloading.. ( % {0} ) {1} / {2} MB\r", percent, (v.Item1 / (double)(1024 * 1024)).ToString("N"), (v.Item2 / (double)(1024 * 1024)).ToString("N")));
+        //                    }))
+        //                    .GetAwaiter().GetResult();
+
+        //            }
+        //            catch (Exception e)
+        //            {
+
+        //                throw;
+        //            }
+        //            return View();
+        //        }
 
         class CustomHandler
         {

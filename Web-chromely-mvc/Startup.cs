@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Web_chromely_mvc.Hubs;
 
 namespace Web_chromely_mvc
 {
@@ -16,6 +17,7 @@ namespace Web_chromely_mvc
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -36,6 +38,8 @@ namespace Web_chromely_mvc
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapHub<DownloadHub>("/downloadHub");
             });
         }
     }
