@@ -5,6 +5,7 @@
         public string SuccessMessage { get; set; } = "Success";
         public string ErrorMessage { get; set; } = "Failed";
         public List<Guid> Ids { get; set; } = default!;
+        public List<string>? AudioFormats { get; set; }
         public bool IsValid { get; set; } = false;
         public object? Data { get; set; }
     }

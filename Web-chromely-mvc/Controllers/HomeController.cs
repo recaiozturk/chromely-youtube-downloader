@@ -2,12 +2,12 @@
 using System.Diagnostics;
 using VideoLibrary;
 using Web_chromely_mvc.Models;
-using System.IO;
 using System.Net;
 using System.Net.Http.Headers;
 using Web_chromely_mvc.Services;
 using Microsoft.AspNetCore.SignalR;
 using Web_chromely_mvc.Hubs;
+using System.IO;
 
 namespace Web_chromely_mvc.Controllers
 {
@@ -43,6 +43,8 @@ namespace Web_chromely_mvc.Controllers
 
                 //var audio = await youtube.GetVideoAsync(audioUri);
 
+                title= title.Replace("/", "-");
+
                 await youtube.CreateDownloadAsync(
                     new Uri(audioUri),
                     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), $"{title}.mp3"),
@@ -66,7 +68,8 @@ namespace Web_chromely_mvc.Controllers
         [HttpPost]
         public async Task<JsonResult> GrabVideoAndAudios(string url)
         {
-            List<Guid> videoIds = new List<Guid>();
+            List<Guid> videoIds = new ();
+            List<string> formats = new ();
 
             var youtube = new CustomYouTube();
             var videoInfos = await youtube.GetAllVideosAsync(url);
@@ -76,11 +79,12 @@ namespace Web_chromely_mvc.Controllers
             foreach ( var audio in audios ) 
             {
                 videoIds.Add(Guid.NewGuid());
+                formats.Add(audio.AudioFormat.ToString());
             }
 
 
             if (audios != null)
-                return Json(new JsonModel { IsValid = true,Ids= videoIds, Data = audios }) ;
+                return Json(new JsonModel { IsValid = true,Ids= videoIds, Data = audios ,AudioFormats=formats}) ;
             else
                 return Json(new JsonModel { IsValid = false,ErrorMessage="No Video or Audio Found"});
 
