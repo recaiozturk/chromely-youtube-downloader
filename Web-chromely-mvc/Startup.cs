@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Web_chromely_mvc.Hubs;
+using Web_chromely_mvc.Services;
 
 namespace Web_chromely_mvc
 {
@@ -18,6 +19,8 @@ namespace Web_chromely_mvc
         {
             services.AddControllersWithViews();
             services.AddSignalR();
+            services.AddScoped<CustomYoutube>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
