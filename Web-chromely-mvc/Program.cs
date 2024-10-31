@@ -8,6 +8,7 @@ using Microsoft.AspNetCore;
 using System.Net.Sockets;
 using System.Net;
 using Web_chromely_mvc;
+using System.Drawing;
 
 var appurls = GetAppUrl();
 
@@ -61,7 +62,9 @@ static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
 static void ChromelyBootstrap(string[] args, string[] appurls)
 {
     var config = DefaultConfiguration.CreateForRuntimePlatform();
-    config.WindowOptions.Title = "Title Window";
+    config.WindowOptions.Title = "youtube mp3 convertor";
+    config.WindowOptions.Size =new WindowSize(800, 600);
+
     config.StartUrl = appurls.First();
 
     AppBuilder
