@@ -13,3 +13,6 @@ This project is the desktop version of a YouTube MP3 converter web application b
 - **Chromely:** To turn a .NET Core web application into a desktop application.
 - **SignalR:** For server-client interaction and push notifications.
 - **HTML, CSS, JavaScript,Bootstrap**: For interface and styling.
+
+## !Important Information About the First Start of the Application
+This application will prepare the necessary files and directories when it is first started. Since these operations require administrator privileges, do not forget to start the application with the "Run as Administrator" option when it is first started. Otherwise, access errors may occur during file preparation operations and the application may not work properly.
