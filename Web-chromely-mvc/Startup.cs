@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Web_chromely_mvc.Hubs;
 using Web_chromely_mvc.Services;
+using YoutubeMp3Convertor.Services;
 
 namespace Web_chromely_mvc
 {
@@ -20,6 +21,7 @@ namespace Web_chromely_mvc
             services.AddControllersWithViews();
             services.AddSignalR();
             services.AddScoped<CustomYoutube>();
+            services.AddScoped<IHomeService, HomeService>();
 
         }
 

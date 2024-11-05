@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>Youtube mp3 convertor</RootNamespace>
+    <RootNamespace>YoutubeMp3Convertor</RootNamespace>
 	  <ApplicationIcon>chromely.ico</ApplicationIcon>
 	  <OutputType>WinExe</OutputType>
 	  
