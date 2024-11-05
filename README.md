@@ -11,6 +11,7 @@ This project is the desktop version of a YouTube MP3 converter web application b
 ## Tech Stack 
 - **NET Core 6:** For the basic infrastructure of the project.
 - **Chromely:** To turn a .NET Core web application into a desktop application.
+- **VideoLibrary:** A .NET library used for YouTube operations and video downloading. For more information, [you can check the VideoLibrary GitHub page](https://github.com/omansak/libvideo/tree/master)
 - **SignalR:** For server-client interaction and push notifications.
 - **HTML, CSS, JavaScript,Bootstrap**: For interface and styling.
 
